@@ -1,33 +1,29 @@
 import {connect} from 'react-redux';
 import * as React from 'react';
 import * as redux from 'redux';
-import {ApplicationState, ProfileElementType} from '../../../Store';
+import {TrainingEntry} from '../../../model/TrainingEntry';
 import {Profile} from '../../../model/Profile';
-import {EducationEntry} from '../../../model/EducationEntry';
 import {NameEntity} from '../../../model/NameEntity';
-import {
-    Table, TableRow, TableBody, TableRowColumn, TableHeader,
-    TableHeaderColumn, IconMenu, IconButton, MenuItem
-} from 'material-ui';
+import {ApplicationState, ProfileElementType} from '../../../Store';
+import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui';
 import {NameEntityUtil} from '../../../utils/NameEntityUtil';
 import {PowerLocalize} from '../../../localization/PowerLocalizer';
-import {formatToShortDisplay} from '../../../utils/DateUtil';
-import {ProfileActionCreator} from '../../../reducers/profile/ProfileActionCreator';
 import * as Immutable from 'immutable';
 import {ViewElement} from '../../../model/viewprofile/ViewElement';
-import {isNullOrUndefined} from 'util';
 import {ViewProfile} from '../../../model/viewprofile/ViewProfile';
-import {AscDescButton} from '../../general/asc-desc-button_module';
+import {formatToShortDisplay} from '../../../utils/DateUtil';
+import {ProfileActionCreator} from '../../../reducers/profile/ProfileActionCreator';
+
 
 /**
  * Properties that are managed by react-redux.
  *
- * Each property defined here will also need a corresponding mapping in the {@link EducationTable.mapStateToProps} method,
+ * Each property defined here will also need a corresponding mapping in the {@link TrainingTable.mapStateToProps} method,
  * otherwise the component will not render and update correctly.
  */
-interface EducationTableProps {
+interface TrainingTableProps {
     viewProfile: ViewProfile;
-    educations: Immutable.Map<string, NameEntity>;
+    trainings: Immutable.Map<string, NameEntity>;
 }
 
 /**
@@ -35,10 +31,10 @@ interface EducationTableProps {
  *
  * These properties are used to initialize the local state and to control everything that is solely used for the display layer.
  *
- * Data that is intended not only for display needs to be placed in the {@link EducationTableProps} and will then be
+ * Data that is intended not only for display needs to be placed in the {@link TrainingTableProps} and will then be
  * managed by redux.
  */
-interface EducationTableLocalProps {
+interface TrainingTableLocalProps {
     viewProfileId: string;
 }
 
@@ -47,44 +43,44 @@ interface EducationTableLocalProps {
  *
  * All display-only state fields, such as bool flags that define if an element is visibile or not, belong here.
  */
-interface EducationTableLocalState {
+interface TrainingTableLocalState {
 
 }
 
 /**
  * Defines mappings from local handlers to redux dispatches that invoke actions on the store.
  */
-interface EducationTableDispatch {
+interface TrainingTableDispatch {
     selectIndexes(indexes: Array<number>|string, viewProfileId: string): void;
 }
 
-class EducationTableModule extends React.Component<
-    EducationTableProps
-    & EducationTableLocalProps
-    & EducationTableDispatch, EducationTableLocalState> {
+class TrainingTableModule extends React.Component<
+    TrainingTableProps
+    & TrainingTableLocalProps
+    & TrainingTableDispatch, TrainingTableLocalState> {
 
-    static mapStateToProps(state: ApplicationState, localProps: EducationTableLocalProps): EducationTableProps {
+    static mapStateToProps(state: ApplicationState, localProps: TrainingTableLocalProps): TrainingTableProps {
         return {
             viewProfile: state.databaseReducer.viewProfiles().get(localProps.viewProfileId),
-            educations: state.databaseReducer.educations()
+            trainings: state.databaseReducer.trainings()
         };
     }
 
-    static mapDispatchToProps(dispatch: redux.Dispatch<ApplicationState>): EducationTableDispatch {
+    static mapDispatchToProps(dispatch: redux.Dispatch<ApplicationState>): TrainingTableDispatch {
         return {
             selectIndexes: (indexes, viewProfileId) => {
-                dispatch(ProfileActionCreator.SelectIndexes(ProfileElementType.EducationEntry, indexes, viewProfileId))
+                dispatch(ProfileActionCreator.SelectIndexes(ProfileElementType.TrainingEntry, indexes, viewProfileId))
             }
         };
     }
 
 
     private isSelected = (index: number) => {
-        return this.props.viewProfile.viewEducationEntries().get(index).enabled();
+        return this.props.viewProfile.viewTrainingEntries().get(index).enabled();
     };
 
     private getEntry = (viewElement: ViewElement) => {
-        return this.props.viewProfile.profile().educationEntries().get(viewElement.elementId());
+        return this.props.viewProfile.profile().trainingEntries().get(viewElement.elementId());
     };
 
     private renderTableRow = (viewElement: ViewElement, index: number) => {
@@ -95,7 +91,7 @@ class EducationTableModule extends React.Component<
                 selected={this.isSelected(index)}
             >
                 <TableRowColumn>
-                    {NameEntityUtil.getNullTolerantName(entry.nameEntityId(), this.props.educations)}
+                    {NameEntityUtil.getNullTolerantName(entry.trainingId(), this.props.trainings)}
                 </TableRowColumn>
                 <TableRowColumn>
                     {formatToShortDisplay(entry.startDate())}
@@ -103,38 +99,31 @@ class EducationTableModule extends React.Component<
                 <TableRowColumn>
                     {formatToShortDisplay(entry.endDate())}
                 </TableRowColumn>
-                <TableRowColumn>
-                    {isNullOrUndefined(entry.degree() || entry.degree() == "null") ? "keiner" : entry.degree()}
-                </TableRowColumn>
             </TableRow>
         );
     };
-
 
     private handleRowSelection = (selectedRows: Array<number> | string) => {
         this.props.selectIndexes(selectedRows, this.props.viewProfileId);
     };
 
+
     render() {
         return (
-            <div id="ViewTable.EducationTable">
+            <div id="ViewTable.TrainingTable">
                 <Table multiSelectable={true}
                        onRowSelection={this.handleRowSelection}
                 >
                     <TableHeader>
                         <TableRow>
-                            <TableHeaderColumn>
-                                {PowerLocalize.get('Education.Singular')}
-                                <AscDescButton/>
-                            </TableHeaderColumn>
+                            <TableHeaderColumn>{PowerLocalize.get('Training.Singular')}</TableHeaderColumn>
                             <TableHeaderColumn>{PowerLocalize.get('Begin')}</TableHeaderColumn>
                             <TableHeaderColumn>{PowerLocalize.get('End')}</TableHeaderColumn>
-                            <TableHeaderColumn>{PowerLocalize.get('AcademicDegree.Singular')}</TableHeaderColumn>
                         </TableRow>
                     </TableHeader>
                     <TableBody deselectOnClickaway={false}>
                         {
-                            this.props.viewProfile.viewEducationEntries().map(this.renderTableRow)
+                            this.props.viewProfile.viewTrainingEntries().map(this.renderTableRow)
                         }
                     </TableBody>
                 </Table>
@@ -144,8 +133,8 @@ class EducationTableModule extends React.Component<
 }
 
 /**
- * @see EducationTableModule
+ * @see TrainingTableModule
  * @author nt
  * @since 29.05.2017
  */
-export const EducationTable: React.ComponentClass<EducationTableLocalProps> = connect(EducationTableModule.mapStateToProps, EducationTableModule.mapDispatchToProps)(EducationTableModule);
+export const TrainingTable: React.ComponentClass<TrainingTableLocalProps> = connect(TrainingTableModule.mapStateToProps, TrainingTableModule.mapDispatchToProps)(TrainingTableModule);
