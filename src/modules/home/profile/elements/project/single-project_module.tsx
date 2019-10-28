@@ -31,6 +31,7 @@ import {PwrSpacer} from '../../../../general/pwr-spacer_module';
 import {SkillChip} from '../skills/skill-chip_module';
 import Power from '@material-ui/icons/Power';
 import Grid from '@material-ui/core/Grid/Grid';
+import {SuggestProjectSkills} from '../../../../general/skill/suggest-project-skills';
 
 const chooseClientName = (project: Project) => {
     if (project.client) {
@@ -227,6 +228,12 @@ class Project_module extends React.Component<ProjectProps & ProjectLocalProps & 
                           canChangeRating={false}/>;
     }
 
+    private handleAddSkills = (skills: string[]) => {
+        const mappedSkills = skills.map(s => ({id: null, name: s, rating: 0}));
+        const projectSkills = [...this.project().skills, ...mappedSkills];
+        this.props.updateEditingProject({...this.project(), ...{skills: projectSkills}});
+    };
+
     render() {
         if (!this.project()) {
             return <span>{PowerLocalize.get('Profile.Project.NoneSelected')}</span>;
@@ -324,7 +331,10 @@ class Project_module extends React.Component<ProjectProps & ProjectLocalProps & 
                     <div className="Pwr-Content-Container">
                         {this.project().skills.map(skill => this.toSkillChip(skill))}
                     </div>
-
+                </div>
+                <div>
+                    <PwrFormCaption>Skillvorschläge</PwrFormCaption>
+                    <SuggestProjectSkills project={this.project()} onAcceptSkills={this.handleAddSkills}/>
                 </div>
                 <div>
                     {this.isEditDisabled() &&
