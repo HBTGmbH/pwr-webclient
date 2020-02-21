@@ -5,14 +5,12 @@ import {ConsultantClient} from '../profile-new/consultant/ConsultantClient';
 import {consultantUpdateAction} from '../profile-new/consultant/actions/ConsultantUpdateAction';
 import {StatisticsActionCreator} from '../statistics/StatisticsActionCreator';
 import {ViewProfileActionCreator} from '../view/ViewProfileActionCreator';
-import {TemplateActionCreator} from '../template/TemplateActionCreator';
 import {COOKIE_INITIALS_NAME} from '../../model/PwrConstants';
 import {NavigationActionCreator} from '../navigation/NavigationActionCreator';
 import {Paths} from '../../Paths';
 import {CrossCuttingActionCreator} from './CrossCuttingActionCreator';
 import {resetProfileStore} from '../profile-new/profile/actions/ProfileActions';
 import {PowerApiError} from '../../clients/PowerHttpClient';
-import {ProfileDataAsyncActionCreator} from '../profile-new/profile/ProfileDataAsyncActionCreator';
 
 
 export namespace CrossCuttingAsyncActionCreator {
@@ -28,6 +26,7 @@ export namespace CrossCuttingAsyncActionCreator {
 
     export function AsyncLogInUser(initials: string, navTarget?: string) {
         return function (dispatch: redux.Dispatch<ApplicationState>, getState: () => ApplicationState) {
+            console.log("Trying to log in user!");
             if (!initials || initials.length <= 0) {
                 dispatch(CrossCuttingActionCreator.SetLoginError('No Initials Set.'));
                 dispatch(CrossCuttingActionCreator.SetLoginStatus(LoginStatus.REJECTED));

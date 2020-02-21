@@ -298,24 +298,40 @@ export class AdminActionCreator {
             if (isNullOrUndefined(rememberLogin)) {
                 rememberLogin = false;
             }
-            profileServiceClient.authenticateAdmin().then(ignored => {
-                if (rememberLogin) {
-                    localStorage.setItem(COOKIE_ADMIN_USERNAME, username);
-                    localStorage.setItem(COOKIE_ADMIN_PASSWORD, password);
-                }
-                dispatch(AdminActionCreator.ChangeLoginStatus(LoginStatus.INITIALS));
-                dispatch(AdminActionCreator.LogInAdmin());
-                if (!restoreRoute) {
-                    PWR_HISTORY.push(Paths.ADMIN_INBOX);
-                }
-                if (window.location.pathname.startsWith('/app/home')) {
-                    PWR_HISTORY.push(Paths.ADMIN_INBOX);
+            console.log("Attempting Login!");
+            profileServiceClient.authenticateAdmin().then(body => {
+                console.log("Login accepted!");
+                const rolesArray : String[] = body.roles;
+                if (rolesArray) {
+                    //Login als Admin
+                    if (rolesArray.indexOf('ADMIN') >= 0) {
+                        if (rememberLogin) {
+                            localStorage.setItem(COOKIE_ADMIN_USERNAME, username);
+                            localStorage.setItem(COOKIE_ADMIN_PASSWORD, password);
+                        }
+                        dispatch(AdminActionCreator.ChangeLoginStatus(LoginStatus.INITIALS));
+                        dispatch(AdminActionCreator.LogInAdmin());
+                        if (!restoreRoute) {
+                            PWR_HISTORY.push(Paths.ADMIN_INBOX);
+                        }
+                        if (window.location.pathname.startsWith('/app/home')) {
+                            PWR_HISTORY.push(Paths.ADMIN_INBOX);
+                        }
+                    } else if (rolesArray.indexOf('USER') >= 0) {
+                        //Login als User
+                        dispatch(CrossCuttingAsyncActionCreator.AsyncLogInUser(username, Paths.USER_HOME));
+                    }
+                } else {
+                    throw new Error ("User doesn't have a list of roles. " +
+                        "An empty array should always be sent in response, even when an existing user has no roles.");
                 }
             }).catch((error: PowerApiError) => {
                 console.error(error);
                 if (error.status != -1) {
+                    console.log("Login rejected!");
                     dispatch(AdminActionCreator.ChangeLoginStatus(LoginStatus.REJECTED));
                 } else {
+                    console.log("Login failed!");
                     dispatch(AdminActionCreator.ChangeLoginStatus(LoginStatus.UNAVAILABLE));
                 }
             });
