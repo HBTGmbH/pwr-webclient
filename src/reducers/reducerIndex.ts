@@ -32,12 +32,15 @@ import {reduceReports} from './report/ReportReducer';
 import {SkillInfoStore} from './profile-skill/SkillInfoStore';
 import {reduceSkillVersions} from './profile-skill/SkillVersionReducer';
 import {TemplateStore} from './template/TemplateStore';
+import {LoginState} from '../model/login/LoginState';
+import {LoginReducer} from './login/LoginReducer';
 
 
 export interface ApplicationState {
     profileStore: ProfileStore;
     suggestionStore: SuggestionStore;
     adminReducer: AdminState;
+    loginReducer: LoginState;
     statisticsReducer: StatisticsStore;
     skillReducer: SkillStore;
     metaDataReducer: MetaDataStore;
@@ -56,6 +59,7 @@ const ApplicationStore: Reducer<ApplicationState> = combineReducers({
     profileStore: reduceProfile,
     suggestionStore: reduceSuggestion,
     adminReducer: AdminReducer.reduce,
+    loginReducer: LoginReducer.reduce,
     statisticsReducer: StatisticsReducer.reduce,
     skillReducer: SkillReducer.reduce,
     metaDataReducer: MetaDataReducer.reduce,

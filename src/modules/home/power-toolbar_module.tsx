@@ -72,7 +72,7 @@ class PowerToolbarModule extends React.Component<ToolbarProps & ToolbarLocalProp
     static mapStateToProps(state: ApplicationState, localProps: ToolbarLocalProps): ToolbarProps {
         return {
             userInitials: state.profileStore.consultant.initials,
-            loggedInAsAdmin: state.adminReducer.loginStatus() === LoginStatus.SUCCESS,
+            loggedInAsAdmin: state.loginReducer.loginStatus() === LoginStatus.SUCCESS,
             statisticsAvailable: state.statisticsReducer.available(),
             viewProfiles: state.viewProfileSlice.viewProfiles().toArray()
         };

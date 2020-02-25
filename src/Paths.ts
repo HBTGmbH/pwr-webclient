@@ -1,10 +1,9 @@
-import {COOKIE_ADMIN_PASSWORD, COOKIE_ADMIN_USERNAME, COOKIE_INITIALS_NAME} from './model/PwrConstants';
+import {COOKIE_PASSWORD, COOKIE_USERNAME} from './model/PwrConstants';
 import {isNullOrUndefined} from 'util';
-import {AdminActionCreator} from './reducers/admin/AdminActionCreator';
 import {store} from './reducers/reducerIndex';
 import {NavigationActionCreator} from './reducers/navigation/NavigationActionCreator';
 import {CONFIG} from './Config';
-import {CrossCuttingAsyncActionCreator} from './reducers/crosscutting/CrossCuttingAsyncActionCreator';
+import {LoginActionCreator} from './reducers/login/LoginActionCreator';
 
 declare const POWER_APP_PATH: string;
 
@@ -43,29 +42,14 @@ export class Paths {
     }
 
     private userAvailableInCookies = () => {
-        return !isNullOrUndefined(window.localStorage.getItem(COOKIE_INITIALS_NAME));
-    };
-
-    private adminAvailableInCookies = () => {
-        return !isNullOrUndefined(window.localStorage.getItem(COOKIE_ADMIN_USERNAME)) && !isNullOrUndefined(window.localStorage.getItem(COOKIE_ADMIN_PASSWORD));
+        return !isNullOrUndefined(window.localStorage.getItem(COOKIE_USERNAME)) && !isNullOrUndefined(window.localStorage.getItem(COOKIE_PASSWORD));
     };
 
     public restorePath() {
         console.info('Current history location is ', location.pathname);
-        if (this.adminAvailableInCookies()) {
+        if (this.userAvailableInCookies()) {
             console.info('Admin is available; Performing admin login!');
-            store.dispatch(AdminActionCreator.AsyncRestoreFromLocalStorage());
-        } else if (this.userAvailableInCookies()) {
-            console.info('User restored from local storage');
-            const storedInitials = window.localStorage.getItem(COOKIE_INITIALS_NAME);
-            let path = location.pathname;
-            // We can restore anything that is part of the user path
-            // We might be on an admin path. If we are, we are going back to user root
-            if (!path.startsWith(Paths.USER_BASE)) {
-                console.log(`Requested path was '${path}', but '${path}' is not part of '${Paths.USER_BASE}'. Falling back to ${Paths.USER_HOME}`);
-                path = Paths.USER_HOME;
-            }
-            store.dispatch(CrossCuttingAsyncActionCreator.AsyncLogInUser(storedInitials, path));
+            store.dispatch(LoginActionCreator.AsyncRestoreFromLocalStorage());
         } else {
             store.dispatch(NavigationActionCreator.AsyncNavigateTo(Paths.APP_ROOT));
         }

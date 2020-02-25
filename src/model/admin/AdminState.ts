@@ -2,13 +2,11 @@ import {doop} from 'doop';
 import * as Immutable from 'immutable';
 import {AdminNotification} from './AdminNotification';
 import {RequestStatus} from '../../Store';
-import {LoginStatus} from '../LoginStatus';
 import {ConsultantInfo} from '../ConsultantInfo';
 import {ProfileEntryNotification} from './ProfileEntryNotification';
 import {SkillNotification} from './SkillNotification';
 import {SkillNotificationEditStatus} from './SkillNotificationEditStatus';
 import {SkillNotificationAction} from './SkillNotificationAction';
-import {AxiosRequestConfig} from 'axios';
 
 @doop
 export class AdminState {
@@ -35,21 +33,6 @@ export class AdminState {
     @doop
     public get requestStatus() {
         return doop<RequestStatus, this>();
-    };
-
-    @doop
-    public get loginStatus() {
-        return doop<LoginStatus, this>();
-    };
-
-    @doop
-    public get adminName() {
-        return doop<string, this>();
-    };
-
-    @doop
-    public get adminPass() {
-        return doop<string, this>();
     };
 
     @doop
@@ -108,9 +91,6 @@ export class AdminState {
                         skillNotifications: Immutable.List<SkillNotification>,
                         trashedNotifications: Immutable.List<AdminNotification>,
                         requestStatus: RequestStatus,
-                        loginStatus: LoginStatus,
-                        adminName: string,
-                        adminPass: string,
                         consultantsByInitials: Immutable.Map<string, ConsultantInfo>,
                         skillInfo: string,
                         skillNotificationEditStatus: SkillNotificationEditStatus,
@@ -125,7 +105,7 @@ export class AdminState {
             .profileUpdateNotifications(profileUpdateNotifications)
             .skillNotifications(skillNotifications)
             .trashedNotifications(trashedNotifications).requestStatus(requestStatus)
-            .loginStatus(loginStatus).adminName(adminName).adminPass(adminPass).consultantsByInitials(consultantsByInitials)
+            .consultantsByInitials(consultantsByInitials)
             .skillNotificationEditStatus(skillNotificationEditStatus)
             .selectedSkillNotification(selectedSkillNotification)
             .skillNotificationError(skillNotificationError)
@@ -140,19 +120,9 @@ export class AdminState {
             Immutable.List<AdminNotification>(),
             Immutable.List<SkillNotification>(),
             Immutable.List<AdminNotification>(),
-            RequestStatus.Inactive, LoginStatus.INITIALS, '', '', Immutable.Map<string, ConsultantInfo>(),
+            RequestStatus.Inactive, Immutable.Map<string, ConsultantInfo>(),
             '',
             SkillNotificationEditStatus.CLOSED, null, '', SkillNotificationAction.ACTION_OK, false, 0, false);
-    }
-
-    public adminAuthConfig(): AxiosRequestConfig {
-        return {
-            auth: {
-                username: this.adminName(),
-                password: this.adminPass()
-            },
-            headers: {'X-Requested-With': 'XMLHttpRequest'}
-        };
     }
 
     public findSkillNotification = (notificationId: number): SkillNotification => {

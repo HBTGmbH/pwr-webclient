@@ -39,7 +39,7 @@ export class ProfileServiceClient extends PowerHttpClient {
     }
 
     private credentialsConfig(): AxiosRequestConfig {
-        return store.getState().adminReducer.adminAuthConfig();
+        return store.getState().loginReducer.loginAuthConfig();
     }
 
 
