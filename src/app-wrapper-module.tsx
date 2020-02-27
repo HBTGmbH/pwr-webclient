@@ -9,7 +9,6 @@ import {ConnectedRouter} from 'react-router-redux';
 import {Route} from 'react-router';
 import {Paths} from './Paths';
 import {LoginModule} from './modules/login_module';
-import {AdminLogin} from './modules/admin/admin-login_module';
 import {PowerClient} from './modules/home/power-client_module';
 import {AdminClient} from './modules/admin/admin-client_module';
 import {ConfirmNavDialog} from './modules/navigation/confirm-nav-dialog_module';
@@ -32,7 +31,7 @@ export class AppWrapper extends React.Component<{}, {}> {
                         <ConnectedRouter history={PWR_HISTORY}>
                             <div>
                                 <Route exact path={Paths.APP_ROOT} component={LoginModule}/>
-                                <Route exact path={Paths.ADMIN_LOGIN} component={AdminLogin}/>
+                                <Route exact path={Paths.ADMIN_LOGIN} component={LoginModule}/>
                                 <Route path={Paths.USER_BASE} component={PowerClient}/>
                                 <Route path={Paths.ADMIN_BASE} component={AdminClient}/>
                                 <ConfirmNavDialog/>

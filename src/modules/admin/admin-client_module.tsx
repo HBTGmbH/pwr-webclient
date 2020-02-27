@@ -29,6 +29,7 @@ import Divider from '@material-ui/core/Divider/Divider';
 import {ReportManager} from './reportmanager/report-manager_module';
 import {TemplateActionCreator} from '../../reducers/template/TemplateActionCreator';
 import {ProfileLoadingSpinner} from '../home/profile/profile-loading-spinner_module';
+import {LoginActionCreator} from '../../reducers/login/LoginActionCreator';
 
 
 /**
@@ -91,8 +92,8 @@ class AdminClientModule extends React.Component<AdminClientProps
 
     static mapStateToProps(state: ApplicationState, localProps: AdminClientLocalProps): AdminClientProps {
         return {
-            username: state.adminReducer.adminName(),
-            password: state.adminReducer.adminPass()
+            username: state.loginReducer.loginName(),
+            password: state.loginReducer.loginPass()
         };
     }
 
@@ -118,7 +119,7 @@ class AdminClientModule extends React.Component<AdminClientProps
                 dispatch(AdminActionCreator.AsyncNavigateToStatistics());
             },
             logOutAdmin: () => {
-                dispatch(AdminActionCreator.AsyncLogOutAdmin());
+                dispatch(LoginActionCreator.AsyncLogOutUser());
             },
             navigateToNetwork: () => {
                 dispatch(AdminActionCreator.AsyncNavigateToNetwork());

@@ -79,8 +79,8 @@ class NotificationInboxModule extends React.Component<NotificationInboxProps
             profileUpdateNotifications: state.adminReducer.profileUpdateNotifications(),
             profileEntryNotifications: state.adminReducer.profileEntryNotifications(),
             skillNotifications: state.adminReducer.skillNotifications(),
-            username: state.adminReducer.adminName(),
-            password: state.adminReducer.adminPass()
+            username: state.loginReducer.loginName(),
+            password: state.loginReducer.loginPass()
         };
     }
 

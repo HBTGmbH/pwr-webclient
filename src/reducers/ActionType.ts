@@ -21,6 +21,7 @@ export enum ActionType {
     DeleteSkill = '[Profile] DeleteSkill',
     UpdateSkillRating = '[Profile] UpdateSkillRating',
     LogInUser = '[Profile] LogInUser',
+    LogOutUser = '[Profile] LogOutUser',
     CreateProject = '[Profile] CreateProject',
     DeleteProject = '[Profile] DeleteProject',
     SaveProject = '[Profile] SaveProject',
@@ -44,9 +45,7 @@ export enum ActionType {
     SetCustomSkillFiltering = '[Skill] SetCustomSkillFiltering',
     ChangeUsername = '[Profile] ChangeUsername',
     ChangePassword = '[Profile] ChangePassword',
-    ChangeAdminLoginStatus = '[Profile] ChangeAdminLoginStatus',
-    LogInAdmin = '[Profile] LogInAdmin',
-    LogOutAdmin = '[Profile] LogOutAdmin',
+    ChangeLoginStatus = '[Profile] ChangeAdminLoginStatus',
 
     /**
      * Requests all consultant informations that are available. This should replace the old informations available.

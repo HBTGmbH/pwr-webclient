@@ -86,7 +86,7 @@ export class ProfileUpdateServiceClient extends PowerHttpClient {
     // ---------------------- LOAD
 
     private credentialsConfig(): AxiosRequestConfig {
-        return store.getState().adminReducer.adminAuthConfig();
+        return store.getState().loginReducer.loginAuthConfig();
     }
 
     public getFullProfile(initials: string): Promise<Profile> {

@@ -1,7 +1,6 @@
 import {AdminState} from '../../model/admin/AdminState';
 import {isNullOrUndefined} from 'util';
 import {
-    ChangeLoginStatusAction,
     ChangeRequestStatusAction,
     OpenSkillNotificationDialogAction,
     ReceiveAllConsultantsAction,
@@ -16,8 +15,6 @@ import {ActionType} from '../ActionType';
 import {RequestStatus} from '../../Store';
 import * as Immutable from 'immutable';
 import {ConsultantInfo} from '../../model/ConsultantInfo';
-import {LoginStatus} from '../../model/LoginStatus';
-import {COOKIE_ADMIN_PASSWORD, COOKIE_ADMIN_USERNAME} from '../../model/PwrConstants';
 import {APIProfileEntryNotification, ProfileEntryNotification} from '../../model/admin/ProfileEntryNotification';
 import {Comparators} from '../../utils/Comparators';
 import {APISkillNotification, SkillNotification} from '../../model/admin/SkillNotification';
@@ -83,34 +80,12 @@ export class AdminReducer {
         return state.requestStatus(action.requestStatus);
     }
 
-    public static ChangeUsername(state: AdminState, action: ChangeStringValueAction) {
-        return state.adminName(action.value);
-    }
-
-    public static ChangePassword(state: AdminState, action: ChangeStringValueAction) {
-        return state.adminPass(action.value);
-    }
-
-    public static ChangeLoginStatus(state: AdminState, action: ChangeLoginStatusAction) {
-        return state.loginStatus(action.status);
-    }
-
-    public static LogInAdmin(state: AdminState, action: AbstractAction): AdminState {
-        return state.loginStatus(LoginStatus.SUCCESS);
-    }
-
     public static ReceiveAllConsultants(state: AdminState, action: ReceiveAllConsultantsAction): AdminState {
         let consultants = Immutable.Map<string, ConsultantInfo>();
         action.consultants.forEach((value, index, array) => {
             consultants = consultants.set(value.initials(), value);
         });
         return state.consultantsByInitials(consultants);
-    }
-
-    public static LogOutAdmin(state: AdminState): AdminState {
-        window.localStorage.removeItem(COOKIE_ADMIN_USERNAME);
-        window.localStorage.removeItem(COOKIE_ADMIN_PASSWORD);
-        return AdminState.createDefault();
     }
 
     public static ReceiveSingleConsultant(state: AdminState, receiveConsultantAction: ReceiveConsultantAction) {
@@ -150,18 +125,8 @@ export class AdminReducer {
                 return AdminReducer.ReceiveTrashedNotifications(state, action as ReceiveNotificationsAction);
             case ActionType.AdminRequestStatus:
                 return state.requestStatus((action as ChangeRequestStatusAction).requestStatus);
-            case ActionType.ChangeAdminLoginStatus:
-                return AdminReducer.ChangeLoginStatus(state, action as ChangeLoginStatusAction);
-            case ActionType.ChangeUsername:
-                return AdminReducer.ChangeUsername(state, action as ChangeStringValueAction);
-            case ActionType.ChangePassword:
-                return AdminReducer.ChangePassword(state, action as ChangeStringValueAction);
-            case ActionType.LogInAdmin:
-                return AdminReducer.LogInAdmin(state, action);
             case ActionType.ReceiveAllConsultants:
                 return AdminReducer.ReceiveAllConsultants(state, action as ReceiveAllConsultantsAction);
-            case ActionType.LogOutAdmin:
-                return AdminReducer.LogOutAdmin(state);
             case ActionType.ReceiveSingleConsultant:
                 return AdminReducer.ReceiveSingleConsultant(state, action as ReceiveConsultantAction);
             case ActionType.SetSkillNotificationEditStatus:

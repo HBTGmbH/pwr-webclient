@@ -1,6 +1,5 @@
 import {AdminNotification, APIAdminNotification} from '../../model/admin/AdminNotification';
 import {RequestStatus} from '../../Store';
-import {LoginStatus} from '../../model/LoginStatus';
 import {ConsultantInfo} from '../../model/ConsultantInfo';
 import {ActionType} from '../ActionType';
 import {SkillNotificationEditStatus} from '../../model/admin/SkillNotificationEditStatus';
@@ -32,10 +31,6 @@ export interface ReceiveNotificationsAction extends AbstractAction {
  */
 export interface ChangeRequestStatusAction extends AbstractAction {
     requestStatus: RequestStatus;
-}
-
-export interface ChangeLoginStatusAction extends AbstractAction {
-    status: LoginStatus;
 }
 
 export interface ReceiveAllConsultantsAction extends AbstractAction {

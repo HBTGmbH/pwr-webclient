@@ -47,7 +47,7 @@ export class ReportManagerInfoBox_Module extends React.Component<ReportManagerIn
 
     static mapStateToProps(state: ApplicationState, localProps: ReportManagerInfoLocalProps): ReportManagerInfoProps {
         return {
-            currentUser: state.adminReducer.adminName(),
+            currentUser: state.loginReducer.loginName(),
         };
     }
 

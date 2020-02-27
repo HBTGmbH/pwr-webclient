@@ -6,6 +6,7 @@ import {APIAdminNotification} from '../model/admin/AdminNotification';
 import {store} from '../reducers/reducerIndex';
 import {ProfileEntryNotification} from '../model/admin/ProfileEntryNotification';
 import {SkillNotification} from '../model/admin/SkillNotification';
+import {Roles} from '../model/admin/Roles';
 
 declare const POWER_PROFILE_SERVICE_URL: string;
 
@@ -38,7 +39,7 @@ export class ProfileServiceClient extends PowerHttpClient {
     }
 
     private credentialsConfig(): AxiosRequestConfig {
-        return store.getState().adminReducer.adminAuthConfig();
+        return store.getState().loginReducer.loginAuthConfig();
     }
 
 
@@ -118,11 +119,12 @@ export class ProfileServiceClient extends PowerHttpClient {
         return this.executeRequest(axios.patch(url, null, config));
     };
 
-    public authenticateAdmin = (): Promise<void> => {
+    public authenticateAdmin = (): Promise<Roles> => {
         const url = this.base() + '/admin/';
+        console.log("Admin URL: " + url);
         let config = this.credentialsConfig();
         this.beginRequest();
-        return this.executeRequest(axios.head(url, config));
+        return this.executeRequest(axios.get(url, config));
     };
 
     public invokeNotificationDelete = (notificationId: number): Promise<void> => {

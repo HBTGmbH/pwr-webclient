@@ -50,7 +50,7 @@ class ReportUploadTemplateDialog extends React.Component<ReportUploadTemplatePro
 
     static mapStateToProps(state: ApplicationState, localProps: ReportUploadTemplateLocalProps): ReportUploadTemplateProps {
         return {
-            currentUser: state.adminReducer.adminName(),
+            currentUser: state.loginReducer.loginName(),
             pending: state.adminReducer.templateUploadPending(),
             progressPercent: state.adminReducer.templateUploadProgress()
         };

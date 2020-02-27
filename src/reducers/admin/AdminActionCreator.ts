@@ -1,7 +1,6 @@
 import {ActionType} from '../ActionType';
 import {APIAdminNotification} from '../../model/admin/AdminNotification';
 import {
-    ChangeLoginStatusAction,
     ChangeRequestStatusAction,
     OpenSkillNotificationDialogAction,
     ReceiveAllConsultantsAction,
@@ -12,13 +11,11 @@ import {
     SetSkillNotificationEditStatusAction
 } from './admin-actions';
 import * as redux from 'redux';
-import {ApplicationState, PWR_HISTORY} from '../reducerIndex';
+import {ApplicationState} from '../reducerIndex';
 import {RequestStatus} from '../../Store';
-import {LoginStatus} from '../../model/LoginStatus';
 import {ConsultantInfo} from '../../model/ConsultantInfo';
 import {StatisticsActionCreator} from '../statistics/StatisticsActionCreator';
 import {isNullOrUndefined} from 'util';
-import {COOKIE_ADMIN_PASSWORD, COOKIE_ADMIN_USERNAME} from '../../model/PwrConstants';
 import {Paths} from '../../Paths';
 import {ProfileEntryNotification} from '../../model/admin/ProfileEntryNotification';
 import {SkillNotificationEditStatus} from '../../model/admin/SkillNotificationEditStatus';
@@ -28,7 +25,6 @@ import {APISkillCategory} from '../../model/skill/SkillCategory';
 import {SkillNotificationAction} from '../../model/admin/SkillNotificationAction';
 import {NavigationActionCreator} from '../navigation/NavigationActionCreator';
 import {ProfileServiceClient} from '../../clients/ProfileServiceClient';
-import {PowerApiError} from '../../clients/PowerHttpClient';
 import {SkillServiceClient} from '../../clients/SkillServiceClient';
 import {Alerts} from '../../utils/Alerts';
 import {CrossCuttingAsyncActionCreator} from '../crosscutting/CrossCuttingAsyncActionCreator';
@@ -59,39 +55,6 @@ export class AdminActionCreator {
         return {
             type: ActionType.AdminRequestStatus,
             requestStatus: to
-        };
-    }
-
-    public static ChangeUsername(val: string): ChangeStringValueAction {
-        return {
-            type: ActionType.ChangeUsername,
-            value: val
-        };
-    }
-
-    public static ChangePassword(val: string): ChangeStringValueAction {
-        return {
-            type: ActionType.ChangePassword,
-            value: val
-        };
-    }
-
-    public static ChangeLoginStatus(status: LoginStatus): ChangeLoginStatusAction {
-        return {
-            type: ActionType.ChangeAdminLoginStatus,
-            status: status
-        };
-    }
-
-    public static LogInAdmin(): AbstractAction {
-        return {
-            type: ActionType.LogInAdmin
-        };
-    }
-
-    public static LogOutAdmin(): AbstractAction {
-        return {
-            type: ActionType.LogOutAdmin
         };
     }
 
@@ -271,54 +234,6 @@ export class AdminActionCreator {
                 .then(() => dispatch(AdminActionCreator.AsyncRequestNotifications()))
                 .then(() => Alerts.showSuccess('Success'))
                 .catch(console.error);
-        };
-    }
-
-
-    public static AsyncRestoreFromLocalStorage() {
-        return function (dispatch: redux.Dispatch<ApplicationState>) {
-            const storedUsername = window.localStorage.getItem(COOKIE_ADMIN_USERNAME);
-            const storedPassword = window.localStorage.getItem(COOKIE_ADMIN_PASSWORD);
-            Promise.all([
-                dispatch(AdminActionCreator.ChangeUsername(storedUsername)),
-                dispatch(AdminActionCreator.ChangePassword(storedPassword))]
-            ).then(() => dispatch(AdminActionCreator.AsyncValidateAuthentication(storedUsername, storedPassword, true, true)));
-        };
-    }
-
-    public static AsyncLogOutAdmin() {
-        return function (dispatch: redux.Dispatch<ApplicationState>) {
-            PWR_HISTORY.push(Paths.APP_ROOT);
-            dispatch(AdminActionCreator.LogOutAdmin());
-        };
-    }
-
-    public static AsyncValidateAuthentication(username: string, password: string, rememberLogin?: boolean, restoreRoute?: boolean) {
-        return function (dispatch: redux.Dispatch<ApplicationState>) {
-            if (isNullOrUndefined(rememberLogin)) {
-                rememberLogin = false;
-            }
-            profileServiceClient.authenticateAdmin().then(ignored => {
-                if (rememberLogin) {
-                    localStorage.setItem(COOKIE_ADMIN_USERNAME, username);
-                    localStorage.setItem(COOKIE_ADMIN_PASSWORD, password);
-                }
-                dispatch(AdminActionCreator.ChangeLoginStatus(LoginStatus.INITIALS));
-                dispatch(AdminActionCreator.LogInAdmin());
-                if (!restoreRoute) {
-                    PWR_HISTORY.push(Paths.ADMIN_INBOX);
-                }
-                if (window.location.pathname.startsWith('/app/home')) {
-                    PWR_HISTORY.push(Paths.ADMIN_INBOX);
-                }
-            }).catch((error: PowerApiError) => {
-                console.error(error);
-                if (error.status != -1) {
-                    dispatch(AdminActionCreator.ChangeLoginStatus(LoginStatus.REJECTED));
-                } else {
-                    dispatch(AdminActionCreator.ChangeLoginStatus(LoginStatus.UNAVAILABLE));
-                }
-            });
         };
     }
 
