@@ -14,6 +14,7 @@ import {PowerLocalize} from '../localization/PowerLocalizer';
 import {getImagePath} from '../API_CONFIG';
 import {Paths} from '../Paths';
 import {LoginActionCreator} from '../reducers/login/LoginActionCreator';
+import {BottomBuildInfo} from './metadata/build-info_module';
 
 
 /**
@@ -122,87 +123,92 @@ class userLoginModule extends React.Component<LoginProps
 
     render() {
         return (
-            <div className="fittingContainer vertical-align">
-                <Paper style={{padding: '30px'}}>
-                    <div className="fittingContainer">
-                        <div className="vertical-align">
-                            <img className="logo-medium" src={getImagePath() + '/HBT002_Logo_pos.png'}/>
-                        </div>
-                        <div className="vertical-align">
-                            <h1>{PowerLocalize.get('Profile.Login.Title')}</h1>
-                        </div>
-                        <div className="vertical-align">
-                            <h4>{PowerLocalize.get('Profile.Login.SubTitle')}</h4>
-                        </div>
-                        <div style={{marginTop: '40px'}}>
+            <div>
+                <div className="fittingContainer vertical-align">
+                    <Paper style={{padding: '30px'}}>
+                        <div className="fittingContainer">
                             <div className="vertical-align">
-                                <TextField
-                                    error={(this.getErrorText() !== null)}
-                                    className="fullWidth"
-                                    label={PowerLocalize.get('Username.Singular')}
-                                    value={'' + this.props.username}
-                                    onChange={(evt) => this.props.changeUsername(evt.target.value)}
-                                    onKeyPress={this.handleInputFieldKeyPress}
-                                />
+                                <img className="logo-medium" src={getImagePath() + '/HBT002_Logo_pos.png'}/>
                             </div>
                             <div className="vertical-align">
-                                <TextField
-                                    error={(this.getErrorText() !== null)}
-                                    className="fullWidth"
-                                    label={PowerLocalize.get('Password.Singular')}
-                                    helperText={this.getErrorText()}
-                                    value={'' + this.props.password}
-                                    onChange={(evt) => this.props.changePassword(evt.target.value)}
-                                    type="password"
-                                    onKeyPress={this.handleInputFieldKeyPress}
-                                />
+                                <h1>{PowerLocalize.get('Profile.Login.Title')}</h1>
                             </div>
-                            <div className="vertical-align" style={{marginTop: '10px', marginBottom: '10px'}}>
-                                <FormGroup>
-                                    <FormControlLabel control={
-                                        <Checkbox
-                                            checked={this.state.rememberLogin}
-                                            onChange={this.handleRememberCheckboxCheck}
-                                            color={'primary'}
-                                        />
-                                    }
-                                                      label={PowerLocalize.get('Profile.Login.Remember')}
+                            <div className="vertical-align">
+                                <h4>{PowerLocalize.get('Profile.Login.SubTitle')}</h4>
+                            </div>
+                            <div style={{marginTop: '40px'}}>
+                                <div className="vertical-align">
+                                    <TextField
+                                        error={(this.getErrorText() !== null)}
+                                        className="fullWidth"
+                                        label={PowerLocalize.get('Username.Singular')}
+                                        value={'' + this.props.username}
+                                        onChange={(evt) => this.props.changeUsername(evt.target.value)}
+                                        onKeyPress={this.handleInputFieldKeyPress}
                                     />
-                                </FormGroup>
-                            </div>
-                            <div className="vertical-align"
-                                 style={{marginTop: '5px', marginBottom: '15px', height: '30px'}}>
-                                {
-                                    this.state.rememberLogin ?
-                                        <div>
+                                </div>
+                                <div className="vertical-align">
+                                    <TextField
+                                        error={(this.getErrorText() !== null)}
+                                        className="fullWidth"
+                                        label={PowerLocalize.get('Password.Singular')}
+                                        helperText={this.getErrorText()}
+                                        value={'' + this.props.password}
+                                        onChange={(evt) => this.props.changePassword(evt.target.value)}
+                                        type="password"
+                                        onKeyPress={this.handleInputFieldKeyPress}
+                                    />
+                                </div>
+                                <div className="vertical-align" style={{marginTop: '10px', marginBottom: '10px'}}>
+                                    <FormGroup>
+                                        <FormControlLabel control={
+                                            <Checkbox
+                                                checked={this.state.rememberLogin}
+                                                onChange={this.handleRememberCheckboxCheck}
+                                                color={'primary'}
+                                            />
+                                        }
+                                                          label={PowerLocalize.get('Profile.Login.Remember')}
+                                        />
+                                    </FormGroup>
+                                </div>
+                                <div className="vertical-align"
+                                     style={{marginTop: '5px', marginBottom: '15px', height: '30px'}}>
+                                    {
+                                        this.state.rememberLogin ?
+                                            <div>
                                             <span
                                                 className="warning-note">Remember Login is a development feature only!</span><br/>
-                                            <span className="warning-note">Your Credentials will be stored in local storage!</span><br/>
-                                            <span className="warning-note">Your Credentials will be vulnerable to cross site attacks!</span>
-                                        </div>
-                                        :
-                                        <span> </span>
-                                }
-                            </div>
-                            <div className={'vertical-align'}
-                                 style={{marginTop: '5px', marginBottom: '15px', height: '30px'}}>
-                                {
-                                    this.getErrorText() !== null ? <span style={{paddingTop: '10px'}}
-                                                                         className={'warning-note'}>{this.getErrorText()}</span> :
-                                        <span> </span>
-                                }
-                            </div>
-                            <div className="vertical-align">
-                                <Button variant={'contained'} style={{float: 'left', marginRight: '5px'}}
-                                        onClick={this.handleAttemptLogIn}
-                                        color={'primary'}>{PowerLocalize.get('Action.Login')}</Button>
-                                <Button variant={'text'} style={{float: 'right', marginRight: '5px'}}
-                                        href={Paths.APP_ROOT}
-                                >{'Zurück'}</Button>
+                                                <span className="warning-note">Your Credentials will be stored in local storage!</span><br/>
+                                                <span className="warning-note">Your Credentials will be vulnerable to cross site attacks!</span>
+                                            </div>
+                                            :
+                                            <span> </span>
+                                    }
+                                </div>
+                                <div className={'vertical-align'}
+                                     style={{marginTop: '5px', marginBottom: '15px', height: '30px'}}>
+                                    {
+                                        this.getErrorText() !== null ? <span style={{paddingTop: '10px'}}
+                                                                             className={'warning-note'}>{this.getErrorText()}</span> :
+                                            <span> </span>
+                                    }
+                                </div>
+                                <div className="vertical-align">
+                                    <Button variant={'contained'} style={{float: 'left', marginRight: '5px'}}
+                                            onClick={this.handleAttemptLogIn}
+                                            color={'primary'}>{PowerLocalize.get('Action.Login')}</Button>
+                                    <Button variant={'text'} style={{float: 'right', marginRight: '5px'}}
+                                            href={Paths.APP_ROOT}
+                                    >{'Zurück'}</Button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </Paper>
+                    </Paper>
+                </div>
+                <div className="vertical-align" style={{marginTop: '50px'}}>
+                    <BottomBuildInfo/>
+                </div>
             </div>);
     }
 }
@@ -212,4 +218,5 @@ class userLoginModule extends React.Component<LoginProps
  * @author nt
  * @since 01.06.2017
  */
-export const LoginModule: React.ComponentClass<LoginLocalProps> = connect(userLoginModule.mapStateToProps, userLoginModule.mapDispatchToProps)(userLoginModule);
+export const LoginModule: React.ComponentClass<LoginLocalProps>
+    = connect(userLoginModule.mapStateToProps, userLoginModule.mapDispatchToProps)(userLoginModule);
