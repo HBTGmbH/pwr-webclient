@@ -17,7 +17,7 @@
     "immutable": "3.8.2",
     "isomorphic-fetch": "2.2.1",
     "material-ui-chip-input": "^1.0.0-beta.7",
-    "moment": "^2.29.1",
+    "moment": "^2.29.4",
     "randomcolor": "0.5.4",
     "react": "^16.14.0",
     "react-autosuggest": "^9.4.2",
